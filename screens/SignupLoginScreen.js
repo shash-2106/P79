@@ -14,16 +14,19 @@ constructor(){
         contact:'',
         address:'',
         confirmPassword:'',
-        isModalVisible:false
+        isModalVisible:false,
+        
     }
 }
-userLogIn=(email,password)=>{
-firebase.auth().signInWithEmailAndPassword(email,password).then((response)=>{
-    return alert("User signed in successfully")
-}).catch((error)=>{
-return alert(error.message);
-})
-
+userLogIn=async(email,password)=>{
+    try{
+const response = await firebase.auth().signInWithEmailAndPassword(email,password)
+if(response){
+    this.props.navigation.navigate('Donate')
+}}
+  catch(error){
+alert(error.message)
+  }  
 }
 userSignUp=(email,password,confirmPassword)=>{
     if(password!=confirmPassword){
@@ -48,6 +51,7 @@ showModal=()=>{
     return(
         <Modal animationType="fade" transparent={true} visible={this.state.isModalVisible}>
         <View>
+         
             <ScrollView>
             <KeyboardAvoidingView>
                 <TextInput style={styles.inputButton} placeholder="First name" maxLength={8} onChangeText={(text)=>{this.setState({
@@ -68,9 +72,9 @@ showModal=()=>{
                 <TouchableOpacity style={styles.button} onPress={()=>{this.userSignUp(this.state.email,this.state.password,this.state.confirmPassword)}}>
                     <Text>Register</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={this.setState({
+                <TouchableOpacity style={styles.button} onPress={()=>{this.setState({
                     isModalVisible:false
-                })}>
+                })}}>
                     <Text>Cancel</Text>
                 </TouchableOpacity>
                 
@@ -84,7 +88,8 @@ showModal=()=>{
     render(){
         return(
             <View>
-                {this.showModal()}
+                
+                {this.showModal()} 
 <TextInput style={styles.inputButton} keyboardType='email-address' placeholder="Email" onChangeText={(text)=>{this.setState({
     email:text
 })
@@ -93,9 +98,9 @@ showModal=()=>{
 <TextInput style={styles.inputButton} placeholder="Password" secureTextEntry={true} onChangeText={(text)=>{this.setState({
     password:text
 })}}></TextInput>
-<TouchableOpacity style={styles.button} onPress={this.setState({
+<TouchableOpacity style={styles.button} onPress={()=>{this.setState({
     isModalVisible:true
-})}>
+})}}>
     <Text>Sign Up</Text>
 </TouchableOpacity>
 <TouchableOpacity style={styles.button} onPress={()=>{this.userLogIn(this.state.email,this.state.password)}}>
