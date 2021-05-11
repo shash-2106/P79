@@ -10,22 +10,24 @@ export default class VolunteerScreen extends React.Component{
     constructor(){
         super();
         this.state={
-           donationList:'',
+           donationList:[],
 
         }
         this.requestRef=null
     }
-    getDonationsList=()=>{
-        this.requestRef=db.collection("donations").onSnapshot((snapshot)=>{
-            var donations = snapshot.docs.map(document=>document.data());
-            this.setState({
-                donationList:donations
-            })
-        })
-    }
+   getDonationsList=()=>{
+       this.requestRef = db.collection("donations")
+.onSnapshot((snapshot)=>{
+    
+    var donation_list = snapshot.forEach((document) => document.data());
+    this.setState({
+        donationList:donation_list
+    })
+})  }
     componentDidMount(){
         this.getDonationsList()
     }
+   
     keyExtractor = (item, index)=>index.toString()
     renderItem=({item,i})=>{
         return(
