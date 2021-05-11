@@ -8,24 +8,24 @@ export default class DonorScreen extends React.Component{
         super();
         this.state={
            userId:firebase.auth().currentUser.email,
-            itemName:'',
-           cost:'',
+            itemName:"",
+           cost:"",
            costForVolunteer:''
         }
     }
     createUniqueId(){
         return Math.random().toString(36).substring(7);
       }
-    addItem=(name,cost)=>{
-        var amount = 25/100*cost;
-        this.setState({
-            costForVolunteer:amount
-        })
+    addItem=()=>{
+      var amount = 0.25*this.state.cost
+    
+     
+       // alert(this.state.costForVolunteer)
        var userId = this.state.userId;
        var randomRequestId = this.createUniqueId();
-       db.collection("donations").add({
-           "item_name":name,
-           "cost":this.state.costForVolunteer,
+              db.collection("donations").add({
+           "item_name":this.state.itemName,
+           "cost":amount,
            "request_id":randomRequestId,
            "user_id":userId
        })
@@ -39,13 +39,14 @@ export default class DonorScreen extends React.Component{
     render(){
         return(
             <View>
+            
             <TextInput style={styles.inputButton} placeholder={"Item name"} onChangeText={(text)=>{this.setState({
-                bookName:text
+                itemName:text
             })}}></TextInput>
             <TextInput style={styles.inputButton} placeholder={"Cost of the item you wish to donate (in rupees)"} keyboardType={'numeric'} maxLength={5} onChangeText={(text)=>{this.setState({
-                cost:text
+               cost:text
             })}}></TextInput>
-            <TouchableOpacity style={styles.button} onPress={()=>{this.addItem(this.state.itemName,this.state.cost)}}>
+            <TouchableOpacity style={styles.button} onPress={()=>{this.addItem()}}>
                 <Text>Add Item</Text>
             </TouchableOpacity>
             </View>
